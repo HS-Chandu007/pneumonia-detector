@@ -1,2 +1,263 @@
-# pneumonia-detector
-Chest X-Ray Pneumonia Detection using transfer learning, Grad-CAM explainability, FastAPI, HTMX, Docker, and Azure. Compared EfficientNet-B0 and ConvNeXt-Tiny, achieving 98.5% accuracy on the test set.
+# 🫁 Pneumonia Detection from Chest X-Rays
+
+> A production-ready medical AI system that detects pneumonia from chest X-ray images with **98.57% accuracy**, powered by transfer learning, explainable AI (Grad-CAM), and deployed on Microsoft Azure.
+
+[![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red?logo=pytorch)](https://pytorch.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.138-green?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-blue?logo=docker)](https://www.docker.com/)
+[![Azure](https://img.shields.io/badge/Azure-Deployed-blue?logo=microsoftazure)](https://azure.microsoft.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
+---
+
+## 🔗 Live Demo
+
+**[pneumoniadetector007.azurewebsites.net]([https://pneumoniadetector007.azurewebsites.net](https://pneumoniadetector007-bne0fqe4e8c2djhy.uaenorth-01.azurewebsites.net/))**
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Features](#-features)
+- [Model Performance](#-model-performance)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [API Reference](#-api-reference)
+- [Explainable AI](#-explainable-ai--grad-cam)
+- [Deployment](#-deployment)
+- [Dataset](#-dataset)
+
+---
+
+## 🔍 Overview
+
+This project builds an end-to-end computer vision pipeline for **automated pneumonia detection** from chest X-ray images. Two state-of-the-art architectures — EfficientNet-B0 and ConvNeXt-Tiny — were trained using transfer learning and evaluated comparatively.
+
+**EfficientNet-B0** was selected as the production model for its:
+- Near-identical accuracy to ConvNeXt-Tiny (98.57%)
+- Significantly smaller footprint (**~15 MB** vs ~111 MB)
+- Lower inference latency — ideal for a real-time API
+
+The system goes beyond classification by integrating **Grad-CAM visualizations**, ensuring predictions are grounded in clinically relevant lung regions rather than image artifacts or dataset bias.
+
+---
+
+## ✨ Features
+
+- 🧠 **Transfer Learning** — Fine-tuned EfficientNet-B0 on chest X-ray data using ImageNet pretrained weights
+- 📊 **Comparative Evaluation** — Benchmarked EfficientNet-B0 vs ConvNeXt-Tiny
+- 🔍 **Explainable AI** — Grad-CAM heatmaps highlight regions driving predictions
+- ⚡ **Real-Time Inference** — FastAPI backend with HTMX for seamless image upload and prediction
+- 📦 **Dockerized** — Fully containerized for reproducible deployment
+- ☁️ **Cloud Deployed** — Hosted on Microsoft Azure App Service
+
+---
+
+## 📊 Model Performance
+
+### EfficientNet-B0 — Production Model
+
+| Metric | Score |
+|--------|-------|
+| Accuracy | **98.57%** |
+| Precision | **98.56%** |
+| Recall | **98.57%** |
+| F1 Score | **98.56%** |
+
+**Confusion Matrix**
+
+|  | Predicted Normal | Predicted Pneumonia |
+|--|--|--|
+| **Actual Normal** | 261 | 9 |
+| **Actual Pneumonia** | 6 | 771 |
+
+---
+
+
+
+### Model Comparison Summary
+
+| | EfficientNet-B0 | ConvNeXt-Tiny |
+|--|--|--|
+| Accuracy | 98.57% | 98.57% |
+| Model Size | **~15 MB** ✅ | ~111 MB |
+| Inference Speed | **Faster** ✅ | Slower |
+| Selected | ✅ Production | ❌ |
+
+> Both models achieved identical evaluation metrics. EfficientNet-B0 was selected for production due to its **7x smaller size** and faster inference, making it better suited for a real-time web API.
+
+---
+
+## 🛠 Tech Stack
+
+| Category | Tools |
+|----------|-------|
+| **Language** | Python 3.12 |
+| **Deep Learning** | PyTorch, timm |
+| **Models** | EfficientNet-B0, ConvNeXt-Tiny |
+| **Explainability** | Grad-CAM |
+| **Backend** | FastAPI, Uvicorn |
+| **Frontend** | HTMX, Jinja2 |
+| **Containerization** | Docker |
+| **Cloud** | Microsoft Azure App Service |
+
+---
+
+
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.12+
+- Docker (optional)
+
+### Run Locally
+
+```bash
+# Clone the repo
+git clone https://github.com/hermitsdocker/pneumonia-detector.git
+cd pneumonia-detector
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the server
+uvicorn app:app --host 0.0.0.0 --port 8000
+```
+
+Visit `http://localhost:8000`
+
+---
+
+### Run with Docker
+
+```bash
+# Pull from Docker Hub
+docker pull hermitsdocker/pneumonia-detector:latest
+
+# Run the container
+docker run -p 8000:8000 hermitsdocker/pneumonia-detector:latest
+```
+
+Visit `http://localhost:8000`
+
+---
+
+## 📡 API Reference
+
+### `POST /predict`
+
+Upload a chest X-ray image and receive a prediction.
+
+**Request**
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -F "file=@chest_xray.jpg"
+```
+
+**Response**
+```json
+{
+  "prediction": "Pneumonia",
+  "confidence": 0.9823,
+  "gradcam_image": "<base64_encoded_heatmap>"
+}
+```
+
+### `GET /docs`
+
+Interactive API documentation (Swagger UI) — auto-generated by FastAPI.
+
+```
+http://localhost:8000/docs
+```
+
+---
+
+## 🔬 Explainable AI — Grad-CAM
+
+Standard deep learning models are often treated as black boxes. In a medical context, **trust and interpretability are critical**.
+
+This project integrates **Gradient-weighted Class Activation Mapping (Grad-CAM)** to:
+
+- Highlight the **specific lung regions** that influenced the prediction
+- Validate that the model focuses on clinically relevant areas (consolidations, infiltrates) rather than image borders, labels, or artifacts
+- Provide radiologists with **visual justification** for AI-generated predictions
+
+Every prediction returns a heatmap overlay on the original X-ray so users can see *why* the model made its decision — not just *what* it decided.
+
+---
+
+## ☁️ Deployment
+
+The app is containerized with Docker and deployed on **Azure App Service**.
+
+### Docker Hub
+
+```bash
+docker pull hermitsdocker/pneumonia-detector:latest
+```
+
+### Azure Deployment (from scratch)
+
+```bash
+# Create App Service Plan
+az appservice plan create \
+  --name pneumonia-plan \
+  --resource-group your-resource-group \
+  --is-linux \
+  --sku B2 \
+  --location eastus
+
+# Deploy web app
+az webapp create \
+  --resource-group your-resource-group \
+  --plan pneumonia-plan \
+  --name your-app-name \
+  --deployment-container-image-name hermitsdocker/pneumonia-detector:latest
+
+# Set port
+az webapp config appsettings set \
+  --resource-group your-resource-group \
+  --name your-app-name \
+  --settings WEBSITES_PORT=8000
+```
+
+---
+
+## 📂 Dataset
+
+- **Source:** [Kaggle — Chest X-Ray Images (Pneumonia)](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia)
+- **Classes:** Normal | Pneumonia
+- **Format:** JPEG chest X-ray images
+- **Notbook Link:** (https://www.kaggle.com/code/hermitsays/efficientnet-vs-convnext-pneumonia-detection)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👤 Author
+
+**Hermit** — [@hermitsdocker](https://hub.docker.com/u/hermitsdocker)
+
+---
+
+> ⚠️ **Disclaimer:** This tool is intended for educational and research purposes only. It is not a substitute for professional medical diagnosis. Always consult a qualified radiologist or physician for medical decisions.
