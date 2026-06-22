@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Pneumonia Detection</title>
+
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:Segoe UI, sans-serif;
+            background:#eef4ff;
+            min-height:100vh;
+            padding:40px;
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+
+        .hero{
+            text-align:center;
+            margin-bottom:40px;
+        }
+
+        .hero h1{
+            font-size:3rem;
+            color:#1e293b;
+            margin-bottom:15px;
+        }
+
+        .hero p{
+            color:#64748b;
+            font-size:1.1rem;
+        }
+
+        .upload-card{
+
+            background:white;
+
+            border-radius:20px;
+
+            padding:40px;
+
+            box-shadow:
+            0 15px 40px rgba(0,0,0,0.08);
+        }
+
+        .upload-box{
+
+            border:2px dashed #93c5fd;
+
+            border-radius:15px;
+
+            padding:40px;
+
+            text-align:center;
+
+            background:#f8fbff;
+        }
+
+        .upload-box h3{
+            color:#334155;
+            margin-bottom:10px;
+        }
+
+        input[type=file]{
+            margin-top:15px;
+        }
+
+        button{
+
+            margin-top:20px;
+
+            background:#2563eb;
+
+            color:white;
+
+            border:none;
+
+            border-radius:10px;
+
+            padding:14px 28px;
+
+            cursor:pointer;
+
+            font-size:16px;
+        }
+
+        button:hover{
+            background:#1d4ed8;
+        }
+
+        #result{
+            margin-top:30px;
+        }
+
+        .htmx-indicator{
+            display:none;
+        }
+
+        .htmx-request .htmx-indicator{
+            display:block;
+        }
+
+        .loading{
+
+            margin-top:20px;
+
+            text-align:center;
+
+            color:#2563eb;
+
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="hero">
+
+        <h1>🫁 AI Pneumonia Detection</h1>
+
+        <p>
+            Upload a chest X-ray and receive an AI prediction
+            with visual explanations using Grad-CAM.
+        </p>
+
+    </div>
+
+    <div class="upload-card">
+
+        <form
+
+            hx-post="/predict"
+
+            hx-target="#result"
+
+            hx-swap="innerHTML"
+
+            hx-encoding="multipart/form-data"
+
+        >
+
+            <div class="upload-box">
+
+                <h3>Upload Chest X-Ray</h3>
+
+                <p>
+                    Supported: JPG, PNG, JPEG
+                </p>
+
+                <input
+                    type="file"
+                    name="file"
+                    required
+                >
+
+                <br>
+
+                <button type="submit">
+                    Analyze X-Ray
+                </button>
+
+            </div>
+
+            <div class="loading htmx-indicator">
+
+                🔍 Analyzing X-Ray...
+
+            </div>
+
+        </form>
+
+        <div id="result"></div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
